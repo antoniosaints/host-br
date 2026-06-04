@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node --no-warnings --watch src/server.js",
+    "start": "node --no-warnings src/server.js",
     "build": "node --no-warnings --check src/server.js",
     "test": "node --no-warnings ../../node_modules/vitest/vitest.mjs run"
   },
