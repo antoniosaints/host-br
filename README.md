@@ -16,7 +16,7 @@ Os planos foram cadastrados com os valores da imagem de referência:
 - VPS NVMe 4: R$ 189,39/mês
 - VPS NVMe 8: R$ 289,99/mês
 
-## Configuracao
+## Configuração
 
 Copie `.env.example` para `.env` e configure:
 
@@ -24,6 +24,13 @@ Copie `.env.example` para `.env` e configure:
 JWT_SECRET=uma-chave-segura
 STRIPE_SECRET_KEY=sk_test_xxx
 STRIPE_WEBHOOK_SECRET=whsec_xxx
+```
+
+Em produção com frontend e API em domínios HTTPS diferentes, use:
+
+```bash
+COOKIE_SAME_SITE=none
+COOKIE_SECURE=true
 ```
 
 Sem `STRIPE_SECRET_KEY`, login, planos e área do cliente funcionam, mas o checkout retorna um erro claro pedindo a chave do Stripe.

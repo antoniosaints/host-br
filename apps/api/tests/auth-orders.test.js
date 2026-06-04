@@ -38,6 +38,30 @@ describe('customer auth and purchases API', () => {
     expect(response.body.user.passwordHash).toBeUndefined();
   });
 
+  it('marks the session cookie as SameSite=None and Secure when app and API use different HTTPS domains', async () => {
+    const productionApp = createApp({
+      database,
+      env: {
+        APP_URL: 'https://hostbr.userp.com.br',
+        API_URL: 'https://sites-hostbr.gcpwp3.easypanel.host',
+        CORS_ORIGIN: 'https://hostbr.userp.com.br',
+        JWT_SECRET: 'test-secret',
+        NODE_ENV: 'production'
+      }
+    });
+
+    const response = await request(productionApp)
+      .post('/api/v1/auth/register')
+      .send({ name: 'Cliente Hostbr', email: 'producao@hostbr.test', password: 'senha-segura' })
+      .expect(201);
+
+    const cookie = response.headers['set-cookie']?.join(';') || '';
+
+    expect(cookie).toContain('hostbr_session=');
+    expect(cookie).toContain('SameSite=None');
+    expect(cookie).toContain('Secure');
+  });
+
   it('requires authentication to list customer purchases', async () => {
     const response = await request(app).get('/api/v1/orders').expect(401);
 

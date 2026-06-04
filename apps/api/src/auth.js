@@ -93,21 +93,57 @@ export function readSessionUser(database, token, secret) {
 
 export function setSessionCookie(response, token, env) {
   response.cookie(SESSION_COOKIE, token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: env.NODE_ENV === 'production',
+    ...sessionCookieOptions(env),
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    path: '/'
   });
 }
 
 export function clearSessionCookie(response, env) {
-  response.clearCookie(SESSION_COOKIE, {
+  response.clearCookie(SESSION_COOKIE, sessionCookieOptions(env));
+}
+
+function sessionCookieOptions(env) {
+  const sameSite = resolveCookieSameSite(env);
+
+  return {
     httpOnly: true,
-    sameSite: 'lax',
-    secure: env.NODE_ENV === 'production',
+    sameSite,
+    secure: resolveCookieSecure(env, sameSite),
     path: '/'
-  });
+  };
+}
+
+function resolveCookieSameSite(env) {
+  const explicit = env.COOKIE_SAME_SITE || env.COOKIE_SAMESITE;
+
+  if (explicit) {
+    return String(explicit).toLowerCase();
+  }
+
+  return isCrossSiteHttps(env.APP_URL || env.CORS_ORIGIN, env.API_URL) ? 'none' : 'lax';
+}
+
+function resolveCookieSecure(env, sameSite) {
+  if (env.COOKIE_SECURE !== undefined) {
+    return ['1', 'true', 'yes', 'on'].includes(String(env.COOKIE_SECURE).toLowerCase());
+  }
+
+  if (sameSite === 'none') {
+    return true;
+  }
+
+  return env.NODE_ENV === 'production';
+}
+
+function isCrossSiteHttps(appUrl, apiUrl) {
+  try {
+    const app = new URL(appUrl);
+    const api = new URL(apiUrl);
+
+    return app.protocol === 'https:' && api.protocol === 'https:' && app.hostname !== api.hostname;
+  } catch {
+    return false;
+  }
 }
 
 function validateRegisterInput(input) {
