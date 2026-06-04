@@ -1,0 +1,20 @@
+{
+  "name": "hostbr-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,yellow npm:dev:api npm:dev:web",
+    "dev:api": "npm run dev -w @hostbr/api",
+    "dev:web": "npm run dev -w @hostbr/web",
+    "build": "npm run build -w @hostbr/api && npm run build -w @hostbr/web",
+    "test": "npm run test -w @hostbr/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

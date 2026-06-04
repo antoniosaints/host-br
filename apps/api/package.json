@@ -1,0 +1,23 @@
+{
+  "name": "@hostbr/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --no-warnings --watch src/server.js",
+    "build": "node --no-warnings --check src/server.js",
+    "test": "node --no-warnings ../../node_modules/vitest/vitest.mjs run"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "stripe": "^18.5.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.4",
+    "vitest": "^4.1.8"
+  }
+}
