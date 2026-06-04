@@ -3,6 +3,7 @@ import { Link, NavLink, Route, Routes, useNavigate, useParams, useSearchParams }
 import { api } from './api.js';
 
 const AuthContext = createContext(null);
+const LOGO_SRC = '/hostbr-logo.png';
 
 const statusLabels = {
   checkout_pending: 'Aguardando pagamento',
@@ -188,7 +189,9 @@ function Shell({ children }) {
     <div className="app-shell">
       <header className="topbar">
         <Link className="brand" to="/" aria-label="Hostbr início">
-          <span className="brand-mark">Hb</span>
+          <span className="brand-logo-frame" aria-hidden="true">
+            <img className="brand-logo" src={LOGO_SRC} alt="" />
+          </span>
           <span>Hostbr</span>
         </Link>
         <nav className="nav-links" aria-label="Navegação principal">
@@ -514,6 +517,14 @@ function AuthPanel({ onSuccess }) {
 
   return (
     <form className="auth-panel" onSubmit={submit}>
+      <div className="auth-brand">
+        <img src={LOGO_SRC} alt="" />
+        <div>
+          <strong>Hostbr</strong>
+          <span>Hospedagem VPS</span>
+        </div>
+      </div>
+
       <div className="auth-tabs">
         <button type="button" className={mode === 'register' ? 'active' : ''} onClick={() => setMode('register')}>
           Criar conta
@@ -526,13 +537,26 @@ function AuthPanel({ onSuccess }) {
       {mode === 'register' ? (
         <label>
           Nome
-          <input name="name" value={form.name} onChange={updateField} autoComplete="name" />
+          <input
+            name="name"
+            value={form.name}
+            onChange={updateField}
+            autoComplete="name"
+            placeholder="Seu nome completo"
+          />
         </label>
       ) : null}
 
       <label>
         E-mail
-        <input name="email" type="email" value={form.email} onChange={updateField} autoComplete="email" />
+        <input
+          name="email"
+          type="email"
+          value={form.email}
+          onChange={updateField}
+          autoComplete="email"
+          placeholder="contato@empresa.com.br"
+        />
       </label>
 
       <label>
@@ -543,6 +567,7 @@ function AuthPanel({ onSuccess }) {
           value={form.password}
           onChange={updateField}
           autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
+          placeholder={mode === 'register' ? 'Crie uma senha segura' : 'Digite sua senha'}
         />
       </label>
 
